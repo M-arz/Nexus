@@ -34,11 +34,19 @@ body {
     margin: 0 auto;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+/* Contenedor del Logotipo en el Header */
+.header-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-imagen {
+    height: 38px; /* Ajusta la altura ideal para tu logo */
+    width: auto;
+    object-fit: contain;
+    /* Como tu logo es oscuro, aplicamos un filtro blanco para que resalte elegantemente en el header oscuro */
+    filter: brightness(0) invert(1);
 }
 
 .badge-pro {
@@ -48,11 +56,10 @@ body {
     padding: 3px 8px;
     border-radius: 6px;
     vertical-align: middle;
-    margin-left: 6px;
 }
 
 .header p {
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     color: #94a3b8;
     font-size: 14px;
 }
@@ -300,6 +307,30 @@ button {
     font-weight: 800;
 }
 
+.btn-pdf {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #059669;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.btn-pdf:hover {
+    background-color: #047857;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+}
+
 .mensaje-estado {
     font-size: 13px;
     font-weight: 600;
@@ -325,7 +356,6 @@ button {
     font-weight: 600;
 }
 
-/* Tabla de Historial */
 .tabla-contenedor {
     overflow-x: auto;
     margin-top: 15px;
@@ -365,30 +395,6 @@ button {
     color: var(--text-muted);
     padding: 24px !important;
 }
-.btn-pdf {
-    width: 100%;
-    margin-top: 20px;
-    background-color: #059669;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
-    transition: all 0.2s ease;
-}
-
-.btn-pdf:hover {
-    background-color: #047857;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
-}
 
 @media (max-width: 850px) {
     .contenedor {
@@ -403,4 +409,3 @@ button {
         gap: 10px;
     }
 }
-
