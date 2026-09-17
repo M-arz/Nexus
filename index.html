@@ -77,6 +77,41 @@
             </form>
         </section>
 
+        <!-- Historial y Reporte de Clientes (Desplegable) -->
+        <section class="card historial-card">
+            <div class="card-header historial-header-flex" id="toggleHistorial" style="cursor: pointer;">
+                <div>
+                    <h2>Historial y Reporte de Clientes <span id="flechaIndicador" class="flecha-acordeon">▼</span></h2>
+                    <p>Haz clic aquí para ver o ocultar el registro de cotizaciones.</p>
+                </div>
+                <button type="button" id="btnLimpiarHistorial" class="btn-secondary btn-small">
+                    Limpiar Historial
+                </button>
+            </div>
+
+            <!-- Contenedor colapsable -->
+            <div id="historialContenido" class="historial-colapsable">
+                <div class="tabla-contenedor">
+                    <table id="tablaHistorial">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Servicio</th>
+                                <th>Horas</th>
+                                <th>Total Inversión</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historialBody">
+                            <tr>
+                                <td colspan="5" class="tabla-vacia">No hay cotizaciones registradas aún.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
         <!-- Resumen Comercial -->
         <aside class="card resumen-card">
             <div class="resumen-header">

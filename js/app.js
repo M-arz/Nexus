@@ -259,6 +259,19 @@ btnLimpiar.addEventListener("click", () => {
     cotizacionActual = null;
 });
 
+// --- CONTROLADOR DEL ACORDEÓN DE HISTORIAL ---
+const toggleHistorialBtn = document.getElementById("toggleHistorial");
+const historialContenido = document.getElementById("historialContenido");
+const flechaIndicador = document.getElementById("flechaIndicador");
+
+toggleHistorialBtn.addEventListener("click", (e) => {
+    // Evita que se colapse si el usuario hace clic directamente en el botón de "Limpiar Historial"
+    if (e.target.closest("#btnLimpiarHistorial")) return;
+
+    historialContenido.classList.toggle("abierto");
+    flechaIndicador.classList.toggle("rotada");
+});
+
 // Botón Limpiar Historial completo
 btnLimpiarHistorial.addEventListener("click", () => {
     if (confirm("¿Estás seguro de que deseas borrar todo el historial de cotizaciones?")) {

@@ -227,6 +227,31 @@ button {
     letter-spacing: 0.5px;
 }
 
+/* Estilos para el Historial Desplegable (Acordeón) */
+.historial-colapsable {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.historial-colapsable.abierto {
+    max-height: 500px; /* Altura máxima estimada para mostrar la tabla */
+    opacity: 1;
+    transition: max-height 0.4s ease-in, opacity 0.3s ease-in;
+}
+
+.flecha-acordeon {
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.flecha-acordeon.rotada {
+    transform: rotate(180deg);
+}
+
 .resumen-box {
     background: #ffffff;
     border: 1.5px solid var(--border-color);
