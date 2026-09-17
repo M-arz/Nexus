@@ -74,6 +74,10 @@ body {
     border: 1px solid var(--border-color);
 }
 
+.historial-card {
+    grid-column: 1 / -1;
+}
+
 .card-header h2 {
     margin: 0 0 6px 0;
     font-size: 20px;
@@ -84,6 +88,16 @@ body {
     margin: 0 0 24px 0;
     color: var(--text-muted);
     font-size: 13px;
+}
+
+.historial-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.historial-header-flex p {
+    margin: 0;
 }
 
 form {
@@ -125,7 +139,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
 }
 
-/* Acciones y Botones con alto impacto visual */
 .acciones-form {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -172,7 +185,11 @@ button {
     transform: translateY(-1px);
 }
 
-/* Tarjeta de Resumen Rediseñada */
+.btn-small {
+    padding: 8px 14px;
+    font-size: 12px;
+}
+
 .resumen-card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     display: flex;
@@ -237,7 +254,7 @@ button {
     border-radius: 8px;
 }
 
-.nivel-default { background: #f1f5f9; color:  #64748b; }
+.nivel-default { background: #f1f5f9; color: #64748b; }
 .nivel-basico { background: #e0f2fe; color: #0369a1; }
 .nivel-intermedio { background: #fef3c7; color: #b45309; }
 .nivel-avanzado { background: #ede9fe; color: #6d28d9; }
@@ -283,7 +300,6 @@ button {
     font-weight: 800;
 }
 
-/* Alertas y estados */
 .mensaje-estado {
     font-size: 13px;
     font-weight: 600;
@@ -309,6 +325,47 @@ button {
     font-weight: 600;
 }
 
+/* Tabla de Historial */
+.tabla-contenedor {
+    overflow-x: auto;
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+#tablaHistorial {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+#tablaHistorial th {
+    background-color: #f8fafc;
+    padding: 12px 16px;
+    color: var(--text-muted);
+    font-weight: 700;
+    border-bottom: 2px solid var(--border-color);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+#tablaHistorial td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#tablaHistorial tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla-vacia {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 24px !important;
+}
+
 @media (max-width: 850px) {
     .contenedor {
         grid-template-columns: 1fr;
@@ -316,4 +373,10 @@ button {
     .fila, .acciones-form {
         grid-template-columns: 1fr;
     }
+    .historial-header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
 }
+

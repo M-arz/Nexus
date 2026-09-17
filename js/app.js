@@ -18,8 +18,10 @@ const money = (valor) => {
 const formulario = document.getElementById("formCotizacion");
 const mensaje = document.getElementById("mensaje");
 const btnLimpiar = document.getElementById("btnLimpiar");
+const btnLimpiarHistorial = document.getElementById("btnLimpiarHistorial");
 const alertasNegocio = document.getElementById("alertasNegocio");
 const resNivelBadge = document.getElementById("resNivel");
+const historialBody = document.getElementById("historialBody");
 
 const calcularSubtotal = (horas, tarifa) => horas * tarifa;
 const calcularDescuento = (subtotal, porcentaje) => subtotal * (porcentaje / 100);
@@ -42,22 +44,49 @@ const clasificarProyecto = (horas) => {
 const validarDatos = (cliente, servicio, horas, tarifa, descuento) => {
     if (!cliente) return "Por favor, ingrese el nombre del cliente o empresa.";
     if (!servicio) return "Debe seleccionar un tipo de solución digital.";
-    
-    // Validación estricta para evitar valores exagerados o irreales
-    if (isNaN(horas) || horas <= 0 || horas > 1000) {
-        return "Las horas estimadas deben ser un valor realista entre 1 y 1.000.";
-    }
-    
-    if (isNaN(tarifa) || tarifa <= 0 || tarifa > 1000000) {
-        return "La tarifa por hora no puede superar $1.000.000 COP.";
-    }
-    
-    if (isNaN(descuento) || descuento < 0 || descuento > 50) {
-        return "El descuento comercial debe estar entre el 0% y el 50%.";
-    }
-    
+    if (isNaN(horas) || horas <= 0 || horas > 1000) return "Las horas estimadas deben ser un valor realista entre 1 y 1.000.";
+    if (isNaN(tarifa) || tarifa <= 0 || tarifa > 1000000) return "La tarifa por hora no puede superar $1.000.000 COP.";
+    if (isNaN(descuento) || descuento < 0 || descuento > 50) return "El descuento comercial debe estar entre el 0% y el 50%.";
     return "";
 };
+
+// --- GESTIÓN DEL HISTORIAL (LOCALSTORAGE) ---
+const obtenerHistorial = () => {
+    const historialGuardado = localStorage.getItem("cotizaciones_nexus");
+    return historialGuardado ? JSON.parse(historialGuardado) : [];
+};
+
+const guardarEnHistorial = (nuevaCotizacion) => {
+    const historial = obtenerHistorial();
+    historial.unshift(nuevaCotizacion);
+    localStorage.setItem("cotizaciones_nexus", JSON.stringify(historial));
+    renderizarHistorial();
+};
+
+const renderizarHistorial = () => {
+    const historial = obtenerHistorial();
+    
+    if (historial.length === 0) {
+        historialBody.innerHTML = `<tr><td colspan="5" class="tabla-vacia">No hay cotizaciones registradas aún.</td></tr>`;
+        return;
+    }
+
+    historialBody.innerHTML = "";
+    historial.forEach(item => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td style="font-weight: 600; color: var(--text-main);">${item.cliente}</td>
+            <td style="color: var(--text-muted);">${item.servicio}</td>
+            <td>${item.horas} hrs</td>
+            <td style="font-weight: 700; color: var(--primary);">${money(item.total)}</td>
+            <td style="color: var(--text-muted); font-size: 12px;">${item.fecha}</td>
+        `;
+        historialBody.appendChild(fila);
+    });
+};
+
+// Cargar historial al iniciar la página
+document.addEventListener("DOMContentLoaded", renderizarHistorial);
 
 formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
@@ -95,7 +124,16 @@ formulario.addEventListener("submit", (evento) => {
     document.getElementById("ivaValor").textContent = money(ivaValor);
     document.getElementById("total").textContent = money(total);
 
-    // Reglas de negocio avanzadas
+    // Guardar objeto en el historial local
+    const nuevaCotizacion = {
+        cliente,
+        servicio: servicioTexto[servicio],
+        horas,
+        total,
+        fecha: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    guardarEnHistorial(nuevaCotizacion);
+
     if (horas > 40) {
         alertasNegocio.innerHTML += `<div class="alerta-negocio">⚡ <strong>Proyecto de alta dedicación:</strong> Requiere asignación prioritaria de recursos técnicos.</div>`;
     }
@@ -104,11 +142,11 @@ formulario.addEventListener("submit", (evento) => {
         alertasNegocio.innerHTML += `<div class="alerta-negocio">💼 <strong>Requiere aprobación comercial:</strong> El monto excede el límite estándar de preventa.</div>`;
     }
 
-    mensaje.textContent = "✔ Cotización procesada con éxito.";
+    mensaje.textContent = "✔ Cotización procesada y guardada en el historial.";
     mensaje.className = "mensaje-estado ok";
 });
 
-// Botón Limpiar optimizado
+// Botón Limpiar formulario
 btnLimpiar.addEventListener("click", () => {
     formulario.reset();
     document.getElementById("resCliente").textContent = "Sin cliente asignado";
@@ -122,9 +160,12 @@ btnLimpiar.addEventListener("click", () => {
     document.getElementById("total").textContent = "$0";
     mensaje.textContent = "";
     alertasNegocio.innerHTML = "";
-    
-    btnLimpiar.style.transform = "scale(0.96)";
-    setTimeout(() => {
-        btnLimpiar.style.transform = "scale(1)";
-    }, 150);
+});
+
+// Botón Limpiar Historial completo
+btnLimpiarHistorial.addEventListener("click", () => {
+    if (confirm("¿Estás seguro de que deseas borrar todo el historial de cotizaciones?")) {
+        localStorage.removeItem("cotizaciones_nexus");
+        renderizarHistorial();
+    }
 });
