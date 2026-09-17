@@ -19,9 +19,13 @@ const formulario = document.getElementById("formCotizacion");
 const mensaje = document.getElementById("mensaje");
 const btnLimpiar = document.getElementById("btnLimpiar");
 const btnLimpiarHistorial = document.getElementById("btnLimpiarHistorial");
+const btnPdf = document.getElementById("btnPdf");
 const alertasNegocio = document.getElementById("alertasNegocio");
 const resNivelBadge = document.getElementById("resNivel");
 const historialBody = document.getElementById("historialBody");
+
+// Variables globales temporales para almacenar la cotización actual a exportar
+let cotizacionActual = null;
 
 const calcularSubtotal = (horas, tarifa) => horas * tarifa;
 const calcularDescuento = (subtotal, porcentaje) => subtotal * (porcentaje / 100);
@@ -85,7 +89,6 @@ const renderizarHistorial = () => {
     });
 };
 
-// Cargar historial al iniciar la página
 document.addEventListener("DOMContentLoaded", renderizarHistorial);
 
 formulario.addEventListener("submit", (evento) => {
@@ -112,27 +115,39 @@ formulario.addEventListener("submit", (evento) => {
     const subtotalConDescuento = subtotal - valorDescuento;
     const ivaValor = calcularIVA(subtotalConDescuento);
     const total = calcularTotal(subtotalConDescuento, ivaValor);
+    const nivel = clasificarProyecto(horas);
 
     // Actualización dinámica de la interfaz
     document.getElementById("resCliente").textContent = cliente;
     document.getElementById("resServicio").textContent = servicioTexto[servicio];
     document.getElementById("resHoras").textContent = horas;
-    resNivelBadge.textContent = `Nivel: ${clasificarProyecto(horas)}`;
+    resNivelBadge.textContent = `Nivel: ${nivel}`;
 
     document.getElementById("subtotal").textContent = money(subtotal);
     document.getElementById("descuentoValor").textContent = `-${money(valorDescuento)}`;
     document.getElementById("ivaValor").textContent = money(ivaValor);
     document.getElementById("total").textContent = money(total);
 
-    // Guardar objeto en el historial local
-    const nuevaCotizacion = {
+    // Mostrar botón de descarga PDF
+    btnPdf.style.display = "flex";
+
+    // Guardar datos actuales en la variable global para exportar al PDF
+    cotizacionActual = {
         cliente,
         servicio: servicioTexto[servicio],
         horas,
+        tarifa,
+        descuento,
+        subtotal,
+        valorDescuento,
+        ivaValor,
         total,
+        nivel,
         fecha: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
-    guardarEnHistorial(nuevaCotizacion);
+
+    // Guardar objeto en el historial local
+    guardarEnHistorial(cotizacionActual);
 
     if (horas > 40) {
         alertasNegocio.innerHTML += `<div class="alerta-negocio">⚡ <strong>Proyecto de alta dedicación:</strong> Requiere asignación prioritaria de recursos técnicos.</div>`;
@@ -142,8 +157,88 @@ formulario.addEventListener("submit", (evento) => {
         alertasNegocio.innerHTML += `<div class="alerta-negocio">💼 <strong>Requiere aprobación comercial:</strong> El monto excede el límite estándar de preventa.</div>`;
     }
 
-    mensaje.textContent = "✔ Cotización procesada y guardada en el historial.";
+    mensaje.textContent = "✔ Cotización procesada y guardada con éxito.";
     mensaje.className = "mensaje-estado ok";
+});
+
+// --- GENERACIÓN DE PDF PROFESIONAL CON JSPDF ---
+btnPdf.addEventListener("click", () => {
+    if (!cotizacionActual) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Encabezado corporativo
+    doc.setFillColor(15, 23, 42); // Azul oscuro corporativo
+    doc.rect(0, 0, 210, 35, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("NEXUS DIGITAL", 20, 22);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Reporte Oficial de Cotización Tecnológica", 145, 22);
+
+    // Información del Cliente
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Detalles del Cliente", 20, 50);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(`Cliente / Empresa: ${cotizacionActual.cliente}`, 20, 60);
+    doc.text(`Solución Requerida: ${cotizacionActual.servicio}`, 20, 68);
+    doc.text(`Fecha de Emisión: ${cotizacionActual.fecha}`, 20, 76);
+
+    // Parámetros Técnicos
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Parámetros del Proyecto", 20, 95);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(`Clasificación de Complejidad: Nivel ${cotizacionActual.nivel}`, 20, 105);
+    doc.text(`Horas Estimadas: ${cotizacionActual.horas} hrs`, 20, 113);
+    doc.text(`Tarifa por Hora: ${money(cotizacionActual.tarifa)}`, 20, 121);
+    doc.text(`Descuento Aplicado: ${cotizacionActual.descuento}%`, 20, 129);
+
+    // Desglose Financiero (Caja de resumen)
+    doc.setDrawColor(226, 232, 240);
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(20, 145, 170, 55, 3, 3, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Resumen Financiero", 30, 157);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(`Subtotal bruto:`, 30, 168);
+    doc.text(`${money(cotizacionActual.subtotal)}`, 160, 168, { align: "right" });
+
+    doc.text(`Descuento comercial:`, 30, 176);
+    doc.text(`-${money(cotizacionActual.valorDescuento)}`, 160, 176, { align: "right" });
+
+    doc.text(`IVA (19%):`, 30, 184);
+    doc.text(`${money(cotizacionActual.ivaValor)}`, 160, 184, { align: "right" });
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(79, 70, 229); // Color primario
+    doc.text(`Inversión Total:`, 30, 194);
+    doc.text(`${money(cotizacionActual.total)}`, 160, 194, { align: "right" });
+
+    // Pie de página
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139);
+    doc.text("Nexus Digital - Documento generado automáticamente por sistema.", 20, 230);
+
+    // Descargar archivo PDF
+    doc.save(`Cotizacion_${cotizacionActual.cliente.replace(/\s+/g, "_")}.pdf`);
 });
 
 // Botón Limpiar formulario
@@ -160,6 +255,8 @@ btnLimpiar.addEventListener("click", () => {
     document.getElementById("total").textContent = "$0";
     mensaje.textContent = "";
     alertasNegocio.innerHTML = "";
+    btnPdf.style.display = "none";
+    cotizacionActual = null;
 });
 
 // Botón Limpiar Historial completo

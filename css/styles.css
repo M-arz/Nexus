@@ -365,6 +365,30 @@ button {
     color: var(--text-muted);
     padding: 24px !important;
 }
+.btn-pdf {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #059669;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    transition: all 0.2s ease;
+}
+
+.btn-pdf:hover {
+    background-color: #047857;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+}
 
 @media (max-width: 850px) {
     .contenedor {

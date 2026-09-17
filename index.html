@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Digital | Cotizador Inteligente</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
     <!-- Fuentes modernas -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Librería jsPDF para generación de PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <header class="header">
@@ -107,6 +109,11 @@
                         <span id="total" class="precio-final">$0</span>
                     </div>
                 </div>
+
+                <!-- Botón de Descarga PDF (Oculto hasta calcular) -->
+                <button type="button" id="btnPdf" class="btn-pdf" style="display: none;">
+                    📥 Descargar Cotización PDF
+                </button>
             </div>
         </aside>
 
