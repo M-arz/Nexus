@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Digital | Cotizador Inteligente</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Fuentes modernas -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>NEXUS <span class="badge-pro">DIGITAL</span></h1>
+            <p>Plataforma avanzada de cotización de servicios tecnológicos</p>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <section class="card form-card">
+            <div class="card-header">
+                <h2>Configuración de Proyecto</h2>
+                <p>Complete los parámetros para generar una estimación precisa.</p>
+            </div>
+            
+            <form id="formCotizacion">
+                <div class="grupo">
+                    <label for="cliente">Nombre del Cliente / Empresa</label>
+                    <input id="cliente" type="text" placeholder="Ej. Innova Solutions S.A.S.">
+                </div>
+
+                <div class="grupo">
+                    <label for="servicio">Solución Requerida</label>
+                    <select id="servicio">
+                        <option value="">Seleccione una opción...</option>
+                        <option value="web">Sitio web corporativo</option>
+                        <option value="ecommerce">Tienda virtual (E-Commerce)</option>
+                        <option value="landing">Landing page de alta conversión</option>
+                        <option value="seo">Consultoría y Auditoría SEO</option>
+                    </select>
+                </div>
+
+                <div class="fila">
+                    <div class="grupo">
+                        <label for="horas">Horas Estimadas (Máx. 1000)</label>
+                        <!-- Límite máximo para evitar valores irreales -->
+                        <input id="horas" type="number" min="1" max="1000" placeholder="Ej. 35">
+                    </div>
+                    <div class="grupo">
+                        <label for="tarifa">Tarifa por Hora (COP)</label>
+                        <!-- Límite máximo de tarifa por hora -->
+                        <input id="tarifa" type="number" min="1" max="1000000" placeholder="Ej. 65000">
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label for="descuento">Descuento Comercial Autorizado (%)</label>
+                    <input id="descuento" type="number" min="0" max="50" placeholder="Ej. 10">
+                </div>
+
+                <div class="acciones-form">
+                    <button type="submit" class="btn-primary">
+                        <span>Calcular Cotización</span>
+                    </button>
+                    <button type="button" id="btnLimpiar" class="btn-secondary">
+                        <span>Restablecer</span>
+                    </button>
+                </div>
+
+                <div id="mensaje" class="mensaje-estado"></div>
+                <div id="alertasNegocio" class="alertas-container"></div>
+            </form>
+        </section>
+
+        <aside class="card resumen-card">
+            <div class="resumen-header">
+                <h2>Resumen Comercial</h2>
+                <span class="etiqueta-vivo">En vivo</span>
+            </div>
+
+            <div class="resumen-box">
+                <div class="resumen-top-info">
+                    <h3 id="resCliente">Sin cliente asignado</h3>
+                    <p id="resServicio">Esperando selección...</p>
+                    <div class="badges-row">
+                        <span id="resNivel" class="badge nivel-default">Nivel: -</span>
+                        <span class="badge badge-horas">⏱️ <span id="resHoras">-</span> hrs</span>
+                    </div>
+                </div>
+
+                <div class="resumen-breakdown">
+                    <div class="item-line">
+                        <span>Subtotal bruto</span>
+                        <span id="subtotal">$0</span>
+                    </div>
+                    <div class="item-line descuento-line">
+                        <span>Descuento aplicado</span>
+                        <span id="descuentoValor">$0</span>
+                    </div>
+                    <div class="item-line">
+                        <span>IVA (19%)</span>
+                        <span id="ivaValor">$0</span>
+                    </div>
+                    <div class="divisor"></div>
+                    <div class="item-line total-line">
+                        <span>Inversión Total</span>
+                        <span id="total" class="precio-final">$0</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
