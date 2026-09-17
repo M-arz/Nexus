@@ -24,7 +24,11 @@ const alertasNegocio = document.getElementById("alertasNegocio");
 const resNivelBadge = document.getElementById("resNivel");
 const historialBody = document.getElementById("historialBody");
 
-// Variables globales temporales para almacenar la cotización actual a exportar
+// Elementos del acordeón del historial
+const toggleHistorialBtn = document.getElementById("toggleHistorial");
+const historialContenido = document.getElementById("historialContenido");
+const flechaIndicador = document.getElementById("flechaIndicador");
+
 let cotizacionActual = null;
 
 const calcularSubtotal = (horas, tarifa) => horas * tarifa;
@@ -91,6 +95,13 @@ const renderizarHistorial = () => {
 
 document.addEventListener("DOMContentLoaded", renderizarHistorial);
 
+// Controlador de apertura y cierre del Historial (Acordeón)
+toggleHistorialBtn.addEventListener("click", (e) => {
+    if (e.target.closest("#btnLimpiarHistorial")) return;
+    historialContenido.classList.toggle("abierto");
+    flechaIndicador.classList.toggle("rotada");
+});
+
 formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
     alertasNegocio.innerHTML = "";
@@ -117,7 +128,6 @@ formulario.addEventListener("submit", (evento) => {
     const total = calcularTotal(subtotalConDescuento, ivaValor);
     const nivel = clasificarProyecto(horas);
 
-    // Actualización dinámica de la interfaz
     document.getElementById("resCliente").textContent = cliente;
     document.getElementById("resServicio").textContent = servicioTexto[servicio];
     document.getElementById("resHoras").textContent = horas;
@@ -128,10 +138,8 @@ formulario.addEventListener("submit", (evento) => {
     document.getElementById("ivaValor").textContent = money(ivaValor);
     document.getElementById("total").textContent = money(total);
 
-    // Mostrar botón de descarga PDF
     btnPdf.style.display = "flex";
 
-    // Guardar datos actuales en la variable global para exportar al PDF
     cotizacionActual = {
         cliente,
         servicio: servicioTexto[servicio],
@@ -146,7 +154,6 @@ formulario.addEventListener("submit", (evento) => {
         fecha: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    // Guardar objeto en el historial local
     guardarEnHistorial(cotizacionActual);
 
     if (horas > 40) {
@@ -168,8 +175,7 @@ btnPdf.addEventListener("click", () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Encabezado corporativo
-    doc.setFillColor(15, 23, 42); // Azul oscuro corporativo
+    doc.setFillColor(15, 23, 42);
     doc.rect(0, 0, 210, 35, "F");
 
     doc.setTextColor(255, 255, 255);
@@ -179,9 +185,8 @@ btnPdf.addEventListener("click", () => {
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text("Reporte Oficial de Cotización Tecnológica", 145, 22);
+    doc.text("Reporte Oficial de Cotización Tecnológica", 135, 22);
 
-    // Información del Cliente
     doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
@@ -193,7 +198,6 @@ btnPdf.addEventListener("click", () => {
     doc.text(`Solución Requerida: ${cotizacionActual.servicio}`, 20, 68);
     doc.text(`Fecha de Emisión: ${cotizacionActual.fecha}`, 20, 76);
 
-    // Parámetros Técnicos
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
     doc.text("Parámetros del Proyecto", 20, 95);
@@ -205,7 +209,6 @@ btnPdf.addEventListener("click", () => {
     doc.text(`Tarifa por Hora: ${money(cotizacionActual.tarifa)}`, 20, 121);
     doc.text(`Descuento Aplicado: ${cotizacionActual.descuento}%`, 20, 129);
 
-    // Desglose Financiero (Caja de resumen)
     doc.setDrawColor(226, 232, 240);
     doc.setFillColor(248, 250, 252);
     doc.roundedRect(20, 145, 170, 55, 3, 3, "FD");
@@ -227,17 +230,15 @@ btnPdf.addEventListener("click", () => {
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13);
-    doc.setTextColor(79, 70, 229); // Color primario
+    doc.setTextColor(79, 70, 229);
     doc.text(`Inversión Total:`, 30, 194);
     doc.text(`${money(cotizacionActual.total)}`, 160, 194, { align: "right" });
 
-    // Pie de página
     doc.setFont("helvetica", "italic");
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
     doc.text("Nexus Digital - Documento generado automáticamente por sistema.", 20, 230);
 
-    // Descargar archivo PDF
     doc.save(`Cotizacion_${cotizacionActual.cliente.replace(/\s+/g, "_")}.pdf`);
 });
 
@@ -257,19 +258,6 @@ btnLimpiar.addEventListener("click", () => {
     alertasNegocio.innerHTML = "";
     btnPdf.style.display = "none";
     cotizacionActual = null;
-});
-
-// --- CONTROLADOR DEL ACORDEÓN DE HISTORIAL ---
-const toggleHistorialBtn = document.getElementById("toggleHistorial");
-const historialContenido = document.getElementById("historialContenido");
-const flechaIndicador = document.getElementById("flechaIndicador");
-
-toggleHistorialBtn.addEventListener("click", (e) => {
-    // Evita que se colapse si el usuario hace clic directamente en el botón de "Limpiar Historial"
-    if (e.target.closest("#btnLimpiarHistorial")) return;
-
-    historialContenido.classList.toggle("abierto");
-    flechaIndicador.classList.toggle("rotada");
 });
 
 // Botón Limpiar Historial completo

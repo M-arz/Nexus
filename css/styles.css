@@ -34,7 +34,6 @@ body {
     margin: 0 auto;
 }
 
-/* Contenedor del Logotipo en el Header */
 .header-logo-container {
     display: flex;
     align-items: center;
@@ -42,10 +41,9 @@ body {
 }
 
 .logo-imagen {
-    height: 38px; /* Ajusta la altura ideal para tu logo */
+    height: 38px;
     width: auto;
     object-fit: contain;
-    /* Como tu logo es oscuro, aplicamos un filtro blanco para que resalte elegantemente en el header oscuro */
     filter: brightness(0) invert(1);
 }
 
@@ -92,7 +90,7 @@ body {
 }
 
 .card-header p {
-    margin: 0 0 24px 0;
+    margin: 0;
     color: var(--text-muted);
     font-size: 13px;
 }
@@ -101,10 +99,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.historial-header-flex p {
-    margin: 0;
 }
 
 form {
@@ -227,31 +221,6 @@ button {
     letter-spacing: 0.5px;
 }
 
-/* Estilos para el Historial Desplegable (Acordeón) */
-.historial-colapsable {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
-    opacity: 0;
-}
-
-.historial-colapsable.abierto {
-    max-height: 500px; /* Altura máxima estimada para mostrar la tabla */
-    opacity: 1;
-    transition: max-height 0.4s ease-in, opacity 0.3s ease-in;
-}
-
-.flecha-acordeon {
-    display: inline-block;
-    font-size: 14px;
-    margin-left: 8px;
-    transition: transform 0.3s ease;
-}
-
-.flecha-acordeon.rotada {
-    transform: rotate(180deg);
-}
-
 .resumen-box {
     background: #ffffff;
     border: 1.5px solid var(--border-color);
@@ -356,6 +325,31 @@ button {
     box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
 }
 
+/* Estilos para el Historial Desplegable (Acordeón) */
+.historial-colapsable {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.historial-colapsable.abierto {
+    max-height: 600px;
+    opacity: 1;
+    transition: max-height 0.4s ease-in, opacity 0.3s ease-in;
+}
+
+.flecha-acordeon {
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 6px;
+    transition: transform 0.3s ease;
+}
+
+.flecha-acordeon.rotada {
+    transform: rotate(180deg);
+}
+
 .mensaje-estado {
     font-size: 13px;
     font-weight: 600;
@@ -383,7 +377,7 @@ button {
 
 .tabla-contenedor {
     overflow-x: auto;
-    margin-top: 15px;
+    margin-top: 20px;
     border: 1px solid var(--border-color);
     border-radius: 12px;
 }
@@ -431,6 +425,6 @@ button {
     .historial-header-flex {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 12px;
     }
 }
